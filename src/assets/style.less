@@ -1,0 +1,218 @@
+.phone {
+  width: 100%;
+  height: 100%;
+  min-height: 100vh;
+  box-sizing: border-box;
+  background-repeat: no-repeat;
+  background-size: cover;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #26acc7;
+}
+.er-box-mid {
+  width: 610px;
+  background: rgba(239, 225, 212, 0.6);
+  padding-top: 50px;
+  padding-bottom: 30px;
+  letter-spacing: 3px;
+  box-shadow: 5px 5px 5px rgba(111, 101, 101, 0.32);
+  .er-mid-top {
+    margin-bottom: 50px;
+    span {
+      display: block;
+      text-align: center;
+      &.txt {
+        font-size: 32px;
+      }
+    }
+    span.circle {
+      width: 104px;
+      height: 104px;
+      border-radius: 50%;
+      background-color: #ffffff;
+      margin: 40px auto 30px;
+      background-repeat: no-repeat;
+      background-size: cover;
+    }
+    img.line {
+      display: block;
+      width: 375px;
+      height: 1px;
+      margin: 0 auto;
+    }
+    .elogo-div {
+      width: 180px;
+      max-height: 180px;
+      overflow: hidden;
+      margin: 0 auto 40px;
+      .elogo {
+        display: block;
+        width: 100%;
+      }
+    }
+  }
+  .er-mid-mid {
+    width: 100%;
+    background: #15cebc;
+    padding-bottom: 20px;
+    text-align: center;
+    color: #ffffff;
+    p {
+      font-size: 28px;
+      line-height: 28px;
+      padding-top: 19px;
+    }
+    h3 {
+      font-size: 34px;
+      font-weight: 500;
+      box-sizing: border-box;
+      line-height: 48px;
+      box-sizing: border-box;
+      padding: 10px 20px 0px;
+    }
+  }
+}
+.toast-box {
+  .layui-m-layercont {
+    padding: 40px 40px;
+  }
+  input {
+    width: 100%;
+    height: 70px;
+    line-height: 70px;
+    border: none;
+    outline: none;
+    text-align: center;
+    font-size: 50px;
+    &::-webkit-input-placeholder {
+      font-size: 28px;
+    }
+    &:last-child {
+      border-top: 1px solid #323232;
+    }
+  }
+}
+
+@inputColor: #666666;
+.er-mid-bot {
+  width: 470px;
+  margin: 60px auto 0;
+  padding-bottom: 74px;
+  input::-webkit-input-placeholder {
+    color: @inputColor;
+  }
+  .form-input {
+    width: 100%;
+    border-bottom: 1px solid #323232;
+    input {
+      display: block;
+      width: 100%;
+      background: none;
+      border: none;
+      outline: none;
+      height: 72px;
+      line-height: 72px;
+      font-size: 32px;
+      text-align: center;
+      letter-spacing: 4px;
+      color: #323232;
+    }
+  }
+  .form-gound {
+    width: 100%;
+    display: flex;
+    height: 72px;
+    line-height: 72px;
+    border-bottom: 1px solid #323232;
+    font-size: 32px;
+    text-align: center;
+    letter-spacing: 4px;
+    input {
+      width: 240px;
+      background: none;
+      outline: none;
+      border: none;
+      font-size: 32px;
+      text-align: center;
+      letter-spacing: 4px;
+      color: #323232;
+      &::-webkit-input-placeholder {
+        color: @inputColor;
+      }
+    }
+    .check {
+      flex: 1;
+      color: #323232;
+      &.on {
+        // opacity: 0.3;
+        outline: none;
+        color: @inputColor;
+        -webkit-tap-heighlight-color: transparent;
+      }
+    }
+  }
+  .btn-form {
+    display: block;
+    width: 100%;
+    height: 90px;
+    background: #15cebc;
+    text-align: center;
+    color: #ffffff;
+    font-size: 30px;
+    line-height: 90px;
+    margin-top: 32px;
+    border-radius: 8px 8px;
+  }
+}
+.er-mid-bot-hidden {
+  width: 470px;
+  margin: 60px auto 0;
+  padding-bottom: 74px;
+  text-align: center;
+  .text {
+    height: 72px;
+    line-height: 72px;
+    font-size: 32px;
+    letter-spacing: 4px;
+    color: #323232;
+    border-bottom: 1px solid #323232;
+  }
+  .num {
+    .text;
+    border-bottom: none;
+  }
+  .btn-form {
+    display: block;
+    width: 100%;
+    height: 90px;
+    background: #15cebc;
+    text-align: center;
+    color: #ffffff;
+    font-size: 30px;
+    line-height: 90px;
+    margin-top: 32px;
+    border-radius: 8px 8px;
+  }
+}
+.er-code {
+  width: 360px;
+  margin: 40px auto 40px;
+  border: 10px solid #ffffff;
+  padding: 0;
+  background: #ffffff;
+  img {
+    display: block;
+    width: 100%;
+  }
+}
+.layer-class-alert {
+  .layui-m-layercont {
+    font-size: 14px;
+  }
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none !important;
+}
