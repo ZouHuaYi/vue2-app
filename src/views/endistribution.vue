@@ -253,7 +253,10 @@ export default {
           let self = this;
           if (result.data.packageType != 0) {
             // 跳转到我的二维码页
-            if (this.judgeBrowse() == "isApp" && this.$scan != "scan") {
+            if (
+              (this.judgeBrowse() == "isApp" && this.$scan != "scan") ||
+              this.$isXiaoCX == "isXiaoCX"
+            ) {
               self.pId = result.data.userId;
               self.createQrcode();
             } else {
@@ -545,6 +548,26 @@ export default {
   },
   async created() {
     if (this.judgeBrowse() === "isWechat") {
+      // 在小程序中打开二维码
+      if (this.$isXiaoCX == "isXiaoCX") {
+        if (this.token) {
+          let tphone = await this.$ajax("rest/user/token", {
+            token: this.token
+          });
+          if (tphone.messageCode == 900) {
+            this.judgeSmallFun(tphone);
+          } else {
+            let msg = tphone.message ? tphone.message : "该用户不存在";
+            this.$layer.msg(msg);
+          }
+        } else {
+          // 在小程序中如果没有token我会先登陆
+          this.getUserData(() => {
+            this.setStatusFun(2);
+          });
+        }
+        return;
+      }
       // 在微信中打开
       let code = this.$code;
       if (code) {

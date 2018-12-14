@@ -11,6 +11,10 @@ import 'babel-polyfill'
 import Es6Promise from 'es6-promise'
 Es6Promise.polyfill()
 
+if (window.location.href.indexOf('m3m.fengwoo.cn') > -1) {
+    let url = widows.location.href.replace('m3m.fengwoo.cn', 'admin.topmei3mei.com');
+    widows.location.href = url;
+}
 
 Vue.use(loading);
 Vue.use(layer);
@@ -32,15 +36,10 @@ Vue.layer.msg = function(content, time = 2) {
     });
 };
 
-//项目域名地址
-<<<<<<< HEAD:src/main.js
 // const root = "http://admin.topmei3mei.com"http://test.topmei3mei.com; 192.168.2.236:8080/msm
 const root = process.env.NODE_ENV == 'production' ? "" : "http://test.topmei3mei.com";
 // const root = process.env.NODE_ENV == 'production' ? "" : "http://192.168.2.236:8080/msm";
-=======
-// const root = "http://admin.topmei3mei.com";
-const root = process.env.NODE_ENV === 'production'? "http://admin.topmei3mei.com" : "http://test.topmei3mei.com";
->>>>>>> 272d2636a644fb45679411490ba4fb2b384450cf:src/index/main.js
+
 
 // 判断对象的方法
 function isObject(val) {
@@ -96,6 +95,8 @@ Object.defineProperty(Vue.prototype, "$hospitalId", { value: getQueryString('hos
 Object.defineProperty(Vue.prototype, "$token", { value: getQueryString('token') });
 Object.defineProperty(Vue.prototype, "$code", { value: getQueryString('code') });
 Object.defineProperty(Vue.prototype, "$scan", { value: getQueryString('scan') });
+Object.defineProperty(Vue.prototype, "$isXiaoCX", { value: getQueryString('isXiaoCX') })
+
 
 new Vue({
     render: h => h(App)
