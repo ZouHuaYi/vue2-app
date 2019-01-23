@@ -12,15 +12,15 @@ import Es6Promise from 'es6-promise'
 Es6Promise.polyfill()
 
 if (window.location.href.indexOf('m3m.fengwoo.cn') > -1) {
-    let url = widows.location.href.replace('m3m.fengwoo.cn', 'admin.topmei3mei.com');
-    widows.location.href = url;
+    let url = window.location.href.replace('m3m.fengwoo.cn', 'admin.topmei3mei.com');
+    window.location.href = url;
 }
 
 Vue.use(loading);
 Vue.use(layer);
 
 // 提示框文字居中的样式封装
-Vue.prototype.$layerCenterMsg = function(content, time = 2) {
+Vue.prototype.$layerCenterMsg = function (content, time = 2) {
     Vue.layer.open({
         content: content,
         className: "layer-msg-center",
@@ -28,7 +28,7 @@ Vue.prototype.$layerCenterMsg = function(content, time = 2) {
         time: time
     });
 };
-Vue.layer.msg = function(content, time = 2) {
+Vue.layer.msg = function (content, time = 2) {
     Vue.layer.open({
         content: content,
         skin: "msg",
@@ -37,8 +37,10 @@ Vue.layer.msg = function(content, time = 2) {
 };
 
 // const root = "http://admin.topmei3mei.com"http://test.topmei3mei.com; 192.168.2.236:8080/msm
-const root = process.env.NODE_ENV == 'production' ? "" : "http://test.topmei3mei.com";
+// const root = process.env.NODE_ENV == 'production' ? "" : "http://test.topmei3mei.com";
 // const root = process.env.NODE_ENV == 'production' ? "" : "http://192.168.2.236:8080/msm";
+const root = ''
+
 
 
 // 判断对象的方法
@@ -65,7 +67,7 @@ let instance = axios.create({
         }
     ]
 });
-Vue.prototype.$ajax = function(url, data, dataType = "form", type = "post") {
+Vue.prototype.$ajax = function (url, data, dataType = "form", type = "post") {
     return new Promise((resolve, reject) => {
         if (dataType == "form") {
             data = JSON.stringify(data);
@@ -95,7 +97,6 @@ Object.defineProperty(Vue.prototype, "$hospitalId", { value: getQueryString('hos
 Object.defineProperty(Vue.prototype, "$token", { value: getQueryString('token') });
 Object.defineProperty(Vue.prototype, "$code", { value: getQueryString('code') });
 Object.defineProperty(Vue.prototype, "$scan", { value: getQueryString('scan') });
-Object.defineProperty(Vue.prototype, "$isXiaoCX", { value: getQueryString('isXiaoCX') })
 
 
 new Vue({

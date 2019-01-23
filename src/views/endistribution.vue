@@ -1,4 +1,5 @@
 <template>
+<div class="pages">
   <div class="container">
     <div class="content">
       <div class="cont-top">
@@ -29,6 +30,7 @@
             <div class="form-ground">
               <input
                 type="tel"
+                @blur="scrollToTop"
                 @input="inputPhone(11,'phone')"
                 v-model.trim="phone"
                 placeholder="请输入您的手机号"
@@ -36,6 +38,7 @@
             </div>
             <div class="form-vcode">
               <input
+                @blur="scrollToTop"
                 type="tel"
                 @input="inputPhone(6,'vcode')"
                 v-model.trim="vcode"
@@ -43,14 +46,14 @@
                 placeholder="请输入验证码"
               >
               <a
-                class="btn-code"
+                class="btn-code no-touch"
                 href="javascript:;"
                 :class="disabledStatus?'on':''"
                 @click="clickSendVcode"
               >{{vcodeText}}</a>
             </div>
             <div class="btn-join">
-              <a class="btn-input hover" @click="postVcode" href="javascript:;">加入我们</a>
+              <a class="btn-input hover no-touch" @click="postVcode" href="javascript:;">加入我们</a>
             </div>
           </div>
         </transition>
@@ -59,7 +62,7 @@
             <div class="zh title">当前登陆账号</div>
             <div class="zh phone">{{phone}}</div>
             <div class="btn-join">
-              <a class="btn-input hover" @click="bindParent" href="javascript:;">加入我们</a>
+              <a class="btn-input hover no-touch" @click="bindParent" href="javascript:;">加入我们</a>
             </div>
           </div>
         </transition>
@@ -84,8 +87,9 @@
           </div>
         </transition>
       </div>
-    </div>
-    <layer
+    </div>  
+  </div>
+  <layer
       class="toast-box"
       v-model="showLayer"
       @sure="passwYesFn"
@@ -93,11 +97,11 @@
       :title="['注册成功,请先完善密码','background:#15CEBC;color:#ffffff;']"
     >
       <div class="toast-content">
-        <input type="password" v-model="password" placeholder="请输入您的密码">
-        <input type="password" v-model="repassword" placeholder="再次确认您的密码">
+        <input type="password" @blur="scrollToTop" v-model="password" placeholder="请输入您的密码" />
+        <input type="password" @blur="scrollToTop" v-model="repassword" placeholder="再次确认您的密码" />
       </div>
     </layer>
-  </div>
+</div>
 </template>
 <script>
 import logo from "../assets/ic_logo.png";
@@ -134,6 +138,13 @@ export default {
     };
   },
   methods: {
+    // 收起键盘回滚
+    scrollToTop(){
+      clearTimeout(this.timWin);
+      this.timWin = setTimeout(()=>{
+        window.scroll(0,0);
+      },500);
+    },
     // 限制 input 输入字数
     inputPhone(val, key) {
       this[key] = this[key].substr(0, val);
@@ -220,6 +231,7 @@ export default {
           // 没有设置密码的时候
           self.token = result.data.token;
           self.showLayer = true;
+          self.bindUnicodeFun(result.data.id);
         } else if (result.messageCode == 900) {
           // 绑定上一级
           self.token = result.data.token;
@@ -228,9 +240,25 @@ export default {
             self.phone = this.formatPhone(phone);
             this.setStatusFun(3);
           });
+          self.bindUnicodeFun(result.data.id);
         } else {
           let msg = result.message ? result.message : "验证码错误";
           self.$layer.msg(msg);
+        }
+      }
+    },
+    // 静默式的绑定uincodeid
+    async bindUnicodeFun(id) {
+      let code = this.$code;
+      if(code){
+        const result = await this.$ajax('/rest/user/open_bind_unbundled',{
+          wechat:code,
+					unionId:code,
+					id:id,
+					action:0
+        })
+        if(result.messageCode==900){
+          console.log('绑定成功')
         }
       }
     },
@@ -253,10 +281,7 @@ export default {
           let self = this;
           if (result.data.packageType != 0) {
             // 跳转到我的二维码页
-            if (
-              (this.judgeBrowse() == "isApp" && this.$scan != "scan") ||
-              this.$isXiaoCX == "isXiaoCX"
-            ) {
+            if (this.judgeBrowse() == "isApp" && this.$scan != "scan") {
               self.pId = result.data.userId;
               self.createQrcode();
             } else {
@@ -287,6 +312,20 @@ export default {
           }
         } else {
           // 不在团队中 也就是没有被绑定 跳转到登录确认页
+          if (
+            !this.hospitalId &&
+            this.judgeBrowse() == "isApp" &&
+            this.$scan != "scan"
+          ) {
+            this.pId = result.data.userId;
+            this.createQrcode();
+            return;
+          }
+          if (!this.hospitalId && this.userId == this.pId) {
+            this.pId = result.data.userId;
+            this.createQrcode();
+            return;
+          }
           callback && callback();
         }
       } else {
@@ -379,15 +418,13 @@ export default {
         url = `${url}?hospitalId=${this.hospitalId}&pId=${this.pId}`;
         this.url = url;
         history.pushState(null, "", url);
-        this.getwxsignal();
+        this.getwxsignal(); // 微信签名
       });
     },
     // 跳转到app页
     gotoApp() {
       let hospitalId = this.hospitalId ? this.hospitalId : 0;
-      window.location.href = `https://axz20z.mlinks.cc/ABcN?type=8&id=${hospitalId}&name=${
-        this.company
-      }`;
+      window.location.href = `https://axz20z.mlinks.cc/ABcN?type=8&id=${hospitalId}&name=${this.company}`;
     },
     // 判断打开web的环境
     judgeBrowse() {
@@ -548,26 +585,6 @@ export default {
   },
   async created() {
     if (this.judgeBrowse() === "isWechat") {
-      // 在小程序中打开二维码
-      if (this.$isXiaoCX == "isXiaoCX") {
-        if (this.token) {
-          let tphone = await this.$ajax("rest/user/token", {
-            token: this.token
-          });
-          if (tphone.messageCode == 900) {
-            this.judgeSmallFun(tphone);
-          } else {
-            let msg = tphone.message ? tphone.message : "该用户不存在";
-            this.$layer.msg(msg);
-          }
-        } else {
-          // 在小程序中如果没有token我会先登陆
-          this.getUserData(() => {
-            this.setStatusFun(2);
-          });
-        }
-        return;
-      }
       // 在微信中打开
       let code = this.$code;
       if (code) {
@@ -583,6 +600,7 @@ export default {
             });
             if (tphone.messageCode == 900) {
               // 判断是否在企业团队里面
+              this.userId = tphone.data.id;
               this.judgeSmallFun(tphone);
             } else {
               let msg = tphone.message ? tphone.message : "该用户不存在";
@@ -601,7 +619,11 @@ export default {
         return;
       }
       let appid = "wx594f420067cba83d";
-      let backUrl = encodeURIComponent(window.location.href);
+      let urlOld = window.location.href;
+      if (urlOld.indexOf("m3m.fengwoo.cn") > -1) {
+        urlOld = urlOld.replace("m3m.fengwoo.cn", "admin.topmei3mei.com");
+      }
+      let backUrl = encodeURIComponent(urlOld);
       let url = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${appid}&redirect_uri=${backUrl}&response_type=code&scope=snsapi_userinfo&state=STATE#wechat_redirect`;
       window.location.href = url;
     } else if (this.judgeBrowse() == "isApp") {
@@ -639,6 +661,24 @@ input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
   -webkit-appearance: none !important;
 }
+.pages{
+  position:relative;
+  width:100%;
+  height:100%;
+}
+.layui-m-layer{
+  position:absolute !important;
+  width:100%;
+  height:100vh;
+}
+a.no-touch {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
 input {
   outline: none;
   box-shadow: none;
@@ -647,6 +687,16 @@ input {
 input:focus {
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
   -webkit-user-modify: read-write-plaintext-only;
+}
+[contenteditable="true"],
+input,
+textarea {
+  -webkit-user-select: auto !important;
+  -khtml-user-select: auto !important;
+  -moz-user-select: auto !important;
+  -ms-user-select: auto !important;
+  -o-user-select: auto !important;
+  user-select: auto !important;
 }
 .qrcode {
   width: 56%;

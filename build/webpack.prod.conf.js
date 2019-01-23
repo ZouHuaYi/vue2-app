@@ -37,7 +37,7 @@ const webpackConfig = merge(baseWebpackConfig, {
                 compress: {
                     warnings: false,
                     // drop_debugger: true,
-                    // drop_console: true
+                    drop_console: true
                 },
                 mangle: {
                     safari10: true
@@ -72,8 +72,8 @@ const webpackConfig = merge(baseWebpackConfig, {
                 removeComments: true,
                 collapseWhitespace: true,
                 removeAttributeQuotes: true
-                    // more options:
-                    // https://github.com/kangax/html-minifier#options-quick-reference
+                // more options:
+                // https://github.com/kangax/html-minifier#options-quick-reference
             },
             // necessary to consistently work with multiple chunks via CommonsChunkPlugin
             chunksSortMode: 'dependency',

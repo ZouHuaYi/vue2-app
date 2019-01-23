@@ -10,8 +10,16 @@ module.exports = {
         // Paths
         assetsSubDirectory: 'static',
         assetsPublicPath: '/',
-        proxyTable: {},
-
+        proxyTable: {
+            '/': {
+                target: 'http://test.topmei3mei.com',
+                secure: false, // 如果是https接口，需要配置这个参数
+                changeOrigin: true, //是否跨域
+                pathRewrite: {
+                    '^/': '' //需要rewrite的,
+                }
+            }
+        },
         host: '0.0.0.0',
         port: 80,
         autoOpenBrowser: false,
